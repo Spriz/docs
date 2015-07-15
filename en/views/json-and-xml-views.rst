@@ -111,22 +111,19 @@ You should use template files if you need to do some manipulation of your view
 content before creating the final output. For example if we had posts, that had
 a field containing generated HTML, we would probably want to omit that from a
 JSON response. This is a situation where a view file would be useful::
-
+    
     // Controller code
-    class ArticlesController extends AppController
-    {
-        public function index()
-        {
-            $articles = $this->paginate('Articles');
-            $this->set(compact('articles'));
+    class PostsController extends AppController {
+        public function index() {
+            $this->set(compact('posts', 'comments'));
         }
     }
 
-    // View code - src/Template/Posts/json/index.ctp
+    // View code - app/View/Posts/json/index.ctp
     foreach ($posts as &$post) {
-        unset($post->generated_html);
+        unset($post['Post']['generated_html']);
     }
-    echo json_encode(compact('posts'));
+    echo json_encode(compact('posts', 'comments'));
 
 You can do more complex manipulations, or use helpers to do formatting as
 well.
